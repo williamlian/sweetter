@@ -1,13 +1,20 @@
 package com.codepath.apps.restclienttemplate;
 
-import org.scribe.builder.api.Api;
-import org.scribe.builder.api.FlickrApi;
-
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.scribe.builder.api.Api;
+import org.scribe.builder.api.TwitterApi;
+
+import java.util.Iterator;
 
 /*
  * 
@@ -22,32 +29,101 @@ import com.loopj.android.http.RequestParams;
  * 
  */
 public class RestClient extends OAuthBaseClient {
-	public static final Class<? extends Api> REST_API_CLASS = FlickrApi.class; // Change this
-	public static final String REST_URL = "http://api.flickr.com/services"; // Change this, base API URL
-	public static final String REST_CONSUMER_KEY = "SOME_KEY";       // Change this
-	public static final String REST_CONSUMER_SECRET = "SOME_SECRET"; // Change this
-	public static final String REST_CALLBACK_URL = "oauth://cprest"; // Change this (here and in manifest)
+	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class;
+	public static final String REST_URL = "https://api.twitter.com/1.1";
+	public static final String REST_CONSUMER_KEY = "SdqOBMn0AmTYvmxI8wKnBVE3W";
+	public static final String REST_CONSUMER_SECRET = "eEUT2e2IqYdJFi65vihDiayU7JNBsovokNwPfvYn0chCGY6sly";
+	public static final String REST_CALLBACK_URL = "oauth://sweetter.williamlian.com";
 
 	public RestClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
-	// CHANGE THIS
-	// DEFINE METHODS for different API endpoints here
-	public void getInterestingnessList(AsyncHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("?nojsoncallback=1&method=flickr.interestingness.getList");
-		// Can specify query string params directly or through RequestParams.
+	public void getHomeTimeline(int count, String maxId, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		RequestParams params = new RequestParams();
-		params.put("format", "json");
-		client.get(apiUrl, params, handler);
+		params.put("count", String.valueOf(count));
+        if(maxId != null) {
+            params.put("max_id", maxId);
+        }
+        params.put("exclude_replies", "1");
+        getClient().get(apiUrl, params, handler);
 	}
 
-	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
-	 * 	  i.e getApiUrl("statuses/home_timeline.json");
-	 * 2. Define the parameters to pass to the request (query or body)
-	 *    i.e RequestParams params = new RequestParams("foo", "bar");
-	 * 3. Define the request method and make a call to the client
-	 *    i.e client.get(apiUrl, params, handler);
-	 *    i.e client.post(apiUrl, params, handler);
-	 */
+    public void getUserTimeline(String screenName, int count, String maxId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/user_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("screen_name", screenName);
+        params.put("count", String.valueOf(count));
+        if(maxId != null) {
+            params.put("max_id", maxId);
+        }
+        params.put("exclude_replies", "1");
+        getClient().get(apiUrl, params, handler);
+    }
+
+    public void getUserSettings(final JsonHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("account/settings.json");
+        getClient().get(apiUrl, new RequestParams(),new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String screenName = response.optString("screen_name");
+                if (screenName != null) {
+                    Log.i(this.getClass().getName(), "Login user: " + screenName);
+                    showUser(screenName, handler);
+                } else {
+                    Log.e(this.getClass().getName(), "cannot get login user screen name");
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                handler.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                handler.onFailure(statusCode, headers, responseString, throwable);
+            }
+        });
+    }
+
+    public void showUser(String screenName, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("users/show.json");
+        RequestParams params = new RequestParams();
+        params.put("screen_name", screenName);
+        getClient().get(apiUrl, params, handler);
+    }
+
+	public void postTweet(String body, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/update.json");
+		RequestParams params = new RequestParams();
+		params.put("status", body);
+		getClient().post(apiUrl, params, handler);
+	}
+
+    public void logRateLimit() {
+        String apiUrl = getApiUrl("application/rate_limit_status.json");
+        RequestParams params = new RequestParams();
+        params.put("resources","statuses");
+        getClient().get(apiUrl, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    JSONObject statuses = response.getJSONObject("resources").getJSONObject("statuses");
+                    Iterator<String> keys = statuses.keys();
+                    while(keys.hasNext()) {
+                        String key = keys.next();
+                        if(key.contains("timeline")) {
+                            String limit = statuses.getJSONObject(key).getString("limit");
+                            String remaining = statuses.getJSONObject(key).getString("remaining");
+                            Log.i(RestClient.class.getName(), String.format("Twitter API Rate Check: %s [%s/%s]", key, limit, remaining));
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 }

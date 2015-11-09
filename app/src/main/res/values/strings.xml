@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Rest Client Template</string>
+    <string name="app_name">Sweeter</string>
     <string name="login_label">Log in</string>
+    <string name="title_activity_compose">ComposeActivity</string>
+    <string name="activity_timeline_label">Home</string>
+    <string name="tweet_hint">What\'s happening?</string>
+    <string name="post_success">Your tweet has been posted!</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>

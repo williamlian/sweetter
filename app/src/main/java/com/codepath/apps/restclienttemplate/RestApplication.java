@@ -18,6 +18,10 @@ public class RestApplication extends com.activeandroid.app.Application {
 	public void onCreate() {
 		super.onCreate();
 		RestApplication.context = this;
+
+		//ActiveAndroid.dispose();
+		//ActiveAndroid.initialize(context);
+
 	}
 
 	public static RestClient getRestClient() {

@@ -1,0 +1,175 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="10dp"
+    android:layout_marginTop="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/tweet_padding"
+        tools:context="com.codepath.apps.restclienttemplate.ViewDetailFragment">
+
+
+        <LinearLayout
+            android:id="@+id/ll_composer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_userImage"
+                android:layout_width="@dimen/profile_image_width"
+                android:layout_height="@dimen/profile_image_width"
+                android:paddingBottom="@dimen/tweet_padding"
+                android:paddingRight="@dimen/tweet_padding"
+                android:paddingTop="@dimen/tweet_padding"
+                android:scaleType="fitStart"/>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="User Name"
+                    android:textColor="@color/user_name"
+                    android:textSize="@dimen/body_text_size"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tv_userScreenName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="UserScreenName"
+                    android:textColor="@color/regular"
+                    android:textSize="@dimen/screen_name_text_size"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_tweet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_composer"
+            android:layout_marginTop="@dimen/body_margin"
+            android:autoLink="all"
+            android:gravity="top|left"
+            android:linksClickable="true"
+            android:textColor="@color/regular"
+            android:textColorLink="@color/twitter_blue"
+            android:textSize="@dimen/body_text_size"/>
+
+        <LinearLayout
+            android:id="@+id/ll_media"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_tweet"
+            android:orientation="vertical"
+            >
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tv_timestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_media"
+            android:layout_marginTop="@dimen/status_text_padding"
+            android:background="@drawable/bottom_border_background"
+            android:paddingBottom="@dimen/detail_status_padding"
+            android:paddingTop="@dimen/detail_status_padding"
+            android:textColor="@color/regular"
+            android:textSize="@dimen/screen_name_text_size"/>
+
+        <TextView
+            android:id="@+id/tv_popularity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tv_timestamp"
+            android:layout_marginTop="@dimen/status_text_padding"
+            android:background="@drawable/bottom_border_background"
+            android:paddingBottom="@dimen/detail_status_padding"
+            android:paddingTop="@dimen/detail_status_padding"
+            android:textColor="@color/regular"
+            android:textSize="@dimen/screen_name_text_size"/>
+
+        <LinearLayout
+            android:id="@+id/ll_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_popularity"
+            android:layout_marginTop="@dimen/status_text_padding"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/detail_status_padding"
+            android:paddingTop="@dimen/detail_status_padding">
+
+            <ImageView
+                android:id="@+id/iv_reply"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/status_row_height"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_share"/>
+
+            <ImageView
+                android:id="@+id/iv_retweet"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/status_row_height"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_retweet"/>
+
+            <ImageView
+                android:id="@+id/iv_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/status_row_height"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_favorite"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_reply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_status"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/btn_reply"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:text="REPLY"/>
+
+            <EditText
+                android:id="@+id/et_reply"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@id/btn_reply"
+                android:hint="Reply"
+                />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</ScrollView>
+
+

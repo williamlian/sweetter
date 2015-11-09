@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingTop="@dimen/tweet_padding"
+              android:paddingBottom="@dimen/tweet_padding"
+              android:paddingRight="@dimen/tweet_padding"
+              android:orientation="horizontal"
+              android:descendantFocusability="blocksDescendants">
+
+    <ImageView
+        android:id="@+id/iv_userProfile"
+        android:layout_width="@dimen/profile_image_width"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/tweet_padding"
+        android:paddingRight="@dimen/tweet_padding"
+        android:paddingBottom="@dimen/tweet_padding"
+        android:scaleType="fitStart"
+        android:src="@drawable/ic_launcher"/>
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <!-- ****************** User Name ****************** -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/user_row_height"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_userName"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:gravity="center_vertical|left"
+                android:paddingRight="@dimen/user_name_gap"
+                android:text="User Name"
+                android:textColor="@color/user_name"
+                android:textSize="@dimen/body_text_size"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_screenName"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:gravity="center_vertical|left"
+                android:text="screenName"
+                android:textColor="@color/regular"
+                android:textSize="@dimen/screen_name_text_size"/>
+
+            <TextView
+                android:id="@+id/tv_age"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:gravity="right"
+                android:text="age"
+                android:textColor="@color/regular"
+                android:textSize="@dimen/screen_name_text_size"/>
+
+        </LinearLayout>
+
+        <!-- ****************** Body ****************** -->
+
+        <com.codepath.apps.restclienttemplate.widget.LinkifiedTextView
+            android:id="@+id/tv_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/body_margin"
+            android:layout_marginTop="@dimen/body_margin"
+            android:text="Content"
+            android:textColor="@color/regular"
+            android:textSize="@dimen/body_text_size"
+            android:autoLink="all"
+            android:linksClickable="true"
+            android:textColorLink="@color/twitter_blue"/>
+
+
+        <!-- ****************** Status ****************** -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/status_row_height"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_share"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text=""
+                    android:paddingLeft="@dimen/status_text_padding"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/regular"
+                    android:textSize="@dimen/screen_name_text_size"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_retweet"/>
+
+                <TextView
+                    android:id="@+id/tv_retweet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Retweet"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/regular"
+                    android:paddingLeft="@dimen/status_text_padding"
+                    android:textSize="@dimen/screen_name_text_size"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:paddingTop="2sp"
+                    android:paddingBottom="2sp"
+                    android:src="@drawable/ic_favorite"/>
+
+                <TextView
+                    android:id="@+id/tv_favorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Favorite"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/regular"
+                    android:paddingLeft="@dimen/status_text_padding"
+                    android:textSize="@dimen/screen_name_text_size"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
