@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/tweet_padding"
-        tools:context="com.codepath.apps.restclienttemplate.ViewDetailFragment">
+        tools:context="com.codepath.apps.restclienttemplate.fragment.ViewDetailFragment">
 
 
         <LinearLayout
@@ -153,18 +153,23 @@
             <Button
                 android:id="@+id/btn_reply"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/status_row_height"
                 android:layout_alignParentRight="true"
-                android:text="REPLY"/>
+                android:text="REPLY"
+                android:background="@android:color/transparent"
+                android:layout_alignParentTop="true"/>
 
             <EditText
                 android:id="@+id/et_reply"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@id/btn_reply"
                 android:hint="Reply"
-                />
+                android:textColor="@color/regular"
+                android:textSize="@dimen/body_text_size"
+                android:background="@android:color/transparent"
+                android:layout_alignParentTop="true"/>
 
 
         </RelativeLayout>

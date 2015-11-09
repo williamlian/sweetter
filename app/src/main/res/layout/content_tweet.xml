@@ -128,7 +128,8 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_retweet"/>
+                    android:src="@drawable/ic_retweet"
+                    android:id="@+id/iv_retweetIcon"/>
 
                 <TextView
                     android:id="@+id/tv_retweet"
@@ -157,7 +158,8 @@
                     android:scaleType="fitCenter"
                     android:paddingTop="2sp"
                     android:paddingBottom="2sp"
-                    android:src="@drawable/ic_favorite"/>
+                    android:src="@drawable/ic_favorite"
+                    android:id="@+id/iv_favoriteIcon"/>
 
                 <TextView
                     android:id="@+id/tv_favorite"

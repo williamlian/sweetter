@@ -151,6 +151,10 @@ public class Tweet extends Model implements Serializable {
 
     public Tweet(JSONObject object) {
         super();
+        update(object);
+    }
+
+    public void update(JSONObject object) {
         try {
             JSONObject user = object.getJSONObject("user");
             this.tweetId = object.getString("id_str");

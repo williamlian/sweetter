@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.codepath.apps.restclienttemplate.RestApplication;
-import com.codepath.apps.restclienttemplate.RestClient;
+import com.codepath.apps.restclienttemplate.client.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -47,7 +47,7 @@ public class LoginUser implements Serializable {
     }
 
     private static void loadOnline(final Context context, final LoadLoginCallback callback) {
-        RestClient client = RestApplication.getRestClient();
+        TwitterClient client = RestApplication.getRestClient();
         client.getUserSettings(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

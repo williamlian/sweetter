@@ -12,11 +12,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.codepath.apps.restclienttemplate.adaptor.TweetAdaptor;
+import com.codepath.apps.restclienttemplate.client.TwitterClient;
+import com.codepath.apps.restclienttemplate.fragment.ComposeFragment;
+import com.codepath.apps.restclienttemplate.fragment.ViewDetailFragment;
 import com.codepath.apps.restclienttemplate.models.LoginUser;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.util.AppUtil;
@@ -34,10 +38,12 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
     TweetAdaptor tweetAdaptor;
     SwipeRefreshLayout swipeContainer;
 
+    boolean noMoreTweets = false;
+
     static final boolean GET_USER_TIMELINE = true;
     static final boolean USE_COMPOSE_DIALOG = true; //set to false to use activity window
 
-    static final String USER_OVERRIDE = "Android"; //debug purpose, set this to null when deploying
+    static final String USER_OVERRIDE = null; //"Android"; //debug purpose, set this to null when deploying
 
     static final int REQUEST_COMPOSE = 100;
     static final int FETCH_SIZE = 10;
@@ -49,6 +55,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         tweetAdaptor = new TweetAdaptor(this, new ArrayList<Tweet>());
         ListView ll_timeline = (ListView) findViewById(R.id.ll_timeline);
         ll_timeline.setAdapter(tweetAdaptor);
@@ -58,6 +66,14 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.srl_timeline);
         swipeContainer.setOnRefreshListener(swipeLoader);
         swipeContainer.setColorSchemeResources(R.color.twitter_blue);
+
+        ImageButton ib_compose = (ImageButton) findViewById(R.id.ib_compose);
+        ib_compose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                compose();
+            }
+        });
 
         getTimeline(null);
     }
@@ -90,8 +106,12 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
             if (tweetAdaptor.getCount() == 0) {
                 getTimeline(null);
             } else {
-                String lastId = tweetAdaptor.getItem(tweetAdaptor.getCount() - 1).getTweetId();
-                getTimeline(lastId);
+                if(!noMoreTweets) {
+                    String lastId = tweetAdaptor.getItem(tweetAdaptor.getCount() - 1).getTweetId();
+                    getTimeline(lastId);
+                } else {
+                    return  false;
+                }
             }
             return true;
         }
@@ -112,7 +132,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
      * *********************************************************************************************/
     private void getHomeTimeline(String max) {
         Log.i(this.getClass().getName(), "Loading timeline older than: " + max);
-        RestClient client = RestApplication.getRestClient();
+        TwitterClient client = RestApplication.getRestClient();
         client.logRateLimit();
         client.getHomeTimeline(FETCH_SIZE, max, new TimelineResponseHandler(max));
     }
@@ -123,7 +143,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
             screenName = LoginUser.get().getScreenName();
         }
         Log.i(this.getClass().getName(), String.format("Loading user timeline for %s older than: %s",screenName,max));
-        RestClient client = RestApplication.getRestClient();
+        TwitterClient client = RestApplication.getRestClient();
         client.logRateLimit();
         client.getUserTimeline(screenName, FETCH_SIZE, max, new TimelineResponseHandler(max));
     }
@@ -148,11 +168,24 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
 
         public void onSuccess(int statusCode, Header[] headers, JSONArray jsonArray) {
             if (maxId == null) {
+                noMoreTweets = false;
                 Tweet.clearLocal();
                 tweetAdaptor.clear();
             }
             List<Tweet> tweets = Tweet.fromJson(jsonArray);
-            tweetAdaptor.addAll(tweets);
+            int prevSize = tweets.size();
+            Log.i(this.getClass().getName(),String.format("%d tweets loaded, max_id = %s",tweets.size(),tweets.get(tweets.size()-1).getTweetId()));
+
+            //only add older tweets
+            for(Tweet tweet : tweets) {
+                if(tweet.getTweetId().equals(maxId)) {
+                    continue;
+                }
+                tweetAdaptor.add(tweet);
+            }
+            if(tweets.size() == prevSize) {
+                noMoreTweets = true;
+            }
             swipeContainer.setRefreshing(false);
         }
 
@@ -172,19 +205,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
                 }
             }
             else {
-                JSONArray errors = json.optJSONArray("errors");
-                StringBuilder sb = new StringBuilder();
-                if (errors != null) {
-                    sb.append("Errors: \n");
-                    for (int i = 0; i < errors.length(); i++) {
-                        JSONObject error = errors.optJSONObject(i);
-                        sb.append(error.optString("code")).append(" - ").append(error.optString("message")).append("\n");
-                    }
-                    sb.deleteCharAt(sb.length() - 1); //remove the last newline
-                } else {
-                    sb.append("Errors: ").append(json.toString());
-                }
-                showError(sb.toString());
+                showError(AppUtil.parseJsonError(json));
                 Log.e(this.getClass().getName(), String.format("Rest call failed [%d] %s", statusCode, json.toString()));
             }
             swipeContainer.setRefreshing(false);
@@ -207,25 +228,20 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
      * *********************************************************************************************/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.timeline, menu);
+        //MenuInflater inflater = getMenuInflater();
+        //inflater.inflate(R.menu.timeline, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if(itemId == R.id.mi_compose) {
-            if(USE_COMPOSE_DIALOG) {
-                FragmentManager fm = getSupportFragmentManager();
-                ComposeFragment composeDialog = ComposeFragment.newInstance();
-                composeDialog.show(fm, "compose_dialog");
-            } else {
-                Intent composeIntent = new Intent(this, ComposeActivity.class);
-                startActivityForResult(composeIntent, REQUEST_COMPOSE);
-            }
+    private void compose() {
+        if(USE_COMPOSE_DIALOG) {
+            FragmentManager fm = getSupportFragmentManager();
+            ComposeFragment composeDialog = ComposeFragment.newInstance();
+            composeDialog.show(fm, "compose_dialog");
+        } else {
+            Intent composeIntent = new Intent(this, ComposeActivity.class);
+            startActivityForResult(composeIntent, REQUEST_COMPOSE);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

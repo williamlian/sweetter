@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.client;
 
 import android.content.Context;
 import android.util.Log;
@@ -28,14 +28,14 @@ import java.util.Iterator;
  * NOTE: You may want to rename this object based on the service i.e TwitterClient or FlickrClient
  * 
  */
-public class RestClient extends OAuthBaseClient {
+public class TwitterClient extends OAuthBaseClient {
 	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class;
 	public static final String REST_URL = "https://api.twitter.com/1.1";
 	public static final String REST_CONSUMER_KEY = "SdqOBMn0AmTYvmxI8wKnBVE3W";
 	public static final String REST_CONSUMER_SECRET = "eEUT2e2IqYdJFi65vihDiayU7JNBsovokNwPfvYn0chCGY6sly";
 	public static final String REST_CALLBACK_URL = "oauth://sweetter.williamlian.com";
 
-	public RestClient(Context context) {
+	public TwitterClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
@@ -46,7 +46,7 @@ public class RestClient extends OAuthBaseClient {
         if(maxId != null) {
             params.put("max_id", maxId);
         }
-        params.put("exclude_replies", "1");
+        //params.put("exclude_replies", "1");
         getClient().get(apiUrl, params, handler);
 	}
 
@@ -58,7 +58,7 @@ public class RestClient extends OAuthBaseClient {
         if(maxId != null) {
             params.put("max_id", maxId);
         }
-        params.put("exclude_replies", "1");
+        //params.put("exclude_replies", "1");
         getClient().get(apiUrl, params, handler);
     }
 
@@ -112,12 +112,12 @@ public class RestClient extends OAuthBaseClient {
                 try {
                     JSONObject statuses = response.getJSONObject("resources").getJSONObject("statuses");
                     Iterator<String> keys = statuses.keys();
-                    while(keys.hasNext()) {
+                    while (keys.hasNext()) {
                         String key = keys.next();
-                        if(key.contains("timeline")) {
+                        if (key.contains("timeline")) {
                             String limit = statuses.getJSONObject(key).getString("limit");
                             String remaining = statuses.getJSONObject(key).getString("remaining");
-                            Log.i(RestClient.class.getName(), String.format("Twitter API Rate Check: %s [%s/%s]", key, limit, remaining));
+                            Log.i(TwitterClient.class.getName(), String.format("Twitter API Rate Check: %s [%s/%s]", key, limit, remaining));
                         }
                     }
                 } catch (JSONException e) {
@@ -125,5 +125,25 @@ public class RestClient extends OAuthBaseClient {
                 }
             }
         });
+    }
+
+    public void reply(String tweetId, String body, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/update.json");
+        RequestParams params = new RequestParams();
+        params.put("status", body);
+        params.put("in_reply_to_status_id", tweetId);
+        getClient().post(apiUrl, params, handler);
+    }
+
+    public void retweet(String tweetId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/retweet/" + tweetId + ".json");
+        getClient().post(apiUrl, new RequestParams(), handler);
+    }
+
+    public void favorite(String tweetId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("favorites/create.json");
+        RequestParams params = new RequestParams();
+        params.put("id", tweetId);
+        getClient().post(apiUrl, params, handler);
     }
 }

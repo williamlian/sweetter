@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.codepath.apps.restclienttemplate.client.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.LoginUser;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -81,7 +82,7 @@ public class ComposeActivity extends AppCompatActivity {
             tweetFail("You have not written anything yet ;-)");
             return;
         }
-        RestClient client = RestApplication.getRestClient();
+        TwitterClient client = RestApplication.getRestClient();
         client.postTweet(text, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

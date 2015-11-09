@@ -24,6 +24,8 @@ public class TweetAdaptor extends ArrayAdapter<Tweet> {
         TextView tv_retweet;
         TextView tv_favorite;
         TextView tv_age;
+        ImageView iv_retweetIcon;
+        ImageView iv_favoriteIcon;
     }
 
     public TweetAdaptor(Context context, List<Tweet> objects) {
@@ -45,6 +47,8 @@ public class TweetAdaptor extends ArrayAdapter<Tweet> {
             viewHolder.tv_retweet = (TextView)convertView.findViewById(R.id.tv_retweet);
             viewHolder.tv_favorite = (TextView)convertView.findViewById(R.id.tv_favorite);
             viewHolder.tv_age = (TextView)convertView.findViewById(R.id.tv_age);
+            viewHolder.iv_retweetIcon = (ImageView)convertView.findViewById(R.id.iv_retweetIcon);
+            viewHolder.iv_favoriteIcon = (ImageView)convertView.findViewById(R.id.iv_favoriteIcon);
         }
 
         Tweet tweet = getItem(position);
@@ -55,7 +59,35 @@ public class TweetAdaptor extends ArrayAdapter<Tweet> {
         viewHolder.tv_body.setText(tweet.getBody());
         viewHolder.tv_age.setText(tweet.getAge());
         Picasso.with(getContext()).load(tweet.getBiggerProfileImage()).into(viewHolder.iv_userProfile);
+        if(tweet.isRetweeted()) {
+            viewHolder.iv_retweetIcon.setImageResource(R.drawable.ic_retweeted);
+            viewHolder.iv_retweetIcon.setOnClickListener(null);
+        } else {
+            viewHolder.iv_retweetIcon.setImageResource(R.drawable.ic_retweet);
+            viewHolder.iv_retweetIcon.setOnClickListener(onRetweet);
+        }
+        if(tweet.isFavorited()) {
+            viewHolder.iv_favoriteIcon.setImageResource(R.drawable.ic_favorited);
+            viewHolder.iv_favoriteIcon.setOnClickListener(null);
+        } else {
+            viewHolder.iv_favoriteIcon.setImageResource(R.drawable.ic_favorite);
+            viewHolder.iv_favoriteIcon.setOnClickListener(onFavorite);
+        }
 
         return convertView;
     }
+
+    private View.OnClickListener onRetweet = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+        }
+    };
+
+    private View.OnClickListener onFavorite = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+        }
+    };
 }
