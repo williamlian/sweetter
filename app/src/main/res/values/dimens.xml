@@ -23,4 +23,6 @@
     <dimen name="app_bar_padding">10dp</dimen>
 
     <dimen name="detail_status_padding">6sp</dimen>
+
+    <dimen name="profile_image_radius">3dp</dimen>
 </resources>

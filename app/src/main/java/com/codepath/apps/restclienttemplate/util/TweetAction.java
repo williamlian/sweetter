@@ -56,16 +56,23 @@ public class TweetAction {
 
         @Override
         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-            tweet.update(response);
-            tweet.save();
+
             switch (actionType) {
                 case REPLY:
+                    Tweet reply = new Tweet(response);
+                    reply.save();
                     callback.onReply(tweet);
                     break;
                 case RETWEET:
+                    tweet.update(response);
+                    tweet.addRetweetCount();
+                    tweet.save();
                     callback.onRetweet(tweet);
                     break;
                 case FAVORITE:
+                    tweet.update(response);
+                    tweet.addFavoriteCount();
+                    tweet.save();
                     callback.onFavorite(tweet);
                     break;
             }

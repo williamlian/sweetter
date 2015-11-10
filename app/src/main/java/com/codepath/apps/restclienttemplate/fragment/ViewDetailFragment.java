@@ -4,9 +4,12 @@ package com.codepath.apps.restclienttemplate.fragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,6 +23,7 @@ import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.util.TweetAction;
 import com.codepath.apps.restclienttemplate.widget.ResizableImageView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 
@@ -32,6 +36,7 @@ public class ViewDetailFragment extends DialogFragment implements TweetAction.Tw
     private static final String ARG_TWEET = "tweet";
     private Tweet tweet;
     private RelativeLayout replyLayout;
+    private boolean updated;
 
     public static ViewDetailFragment newInstance(Tweet tweet) {
         ViewDetailFragment fragment = new ViewDetailFragment();
@@ -51,6 +56,7 @@ public class ViewDetailFragment extends DialogFragment implements TweetAction.Tw
         if (getArguments() != null) {
             tweet = (Tweet)getArguments().getSerializable(ARG_TWEET);
         }
+        updated = false;
     }
 
     @Override
@@ -61,12 +67,24 @@ public class ViewDetailFragment extends DialogFragment implements TweetAction.Tw
     }
 
     @Override
+    public void onResume() {
+        adjustDialogSize();
+        super.onResume();
+    }
+
+
+    public void adjustDialogSize() {
+        int width = (int)(getResources().getDisplayMetrics().widthPixels * 0.9);
+        int height = getResources().getDisplayMetrics().heightPixels / 2;
+        int currentHeight = this.getDialog().getWindow().getDecorView().getHeight();
+        Log.i(this.getClass().getName(),String.format("display %d x %d, dialog height %d",width,height,currentHeight));
+        if(currentHeight > height)
+            getDialog().getWindow().setLayout(width, height);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-//        int width = getResources().getDisplayMetrics().widthPixels;
-//        int height = getResources().getDisplayMetrics().heightPixels;
-//        getDialog().getWindow().setLayout(width , height);
 
         TextView tv_userName = (TextView)view.findViewById(R.id.tv_userName);
         TextView tv_screenName = (TextView)view.findViewById(R.id.tv_userScreenName);
@@ -82,10 +100,19 @@ public class ViewDetailFragment extends DialogFragment implements TweetAction.Tw
 
         tv_userName.setText(tweet.getUserName());
         tv_screenName.setText(tweet.getScreenName());
-        Picasso.with(view.getContext()).load(tweet.getBiggerProfileImage()).into(iv_userProfile);
         tv_tweet.setText(tweet.getBody());
         tv_timestamp.setText(tweet.getFormattedTimestamp());
         tv_popularity.setText(tweet.getPopularity());
+
+
+        Picasso.with(view.getContext()).load(tweet.getBiggerProfileImage()).into(iv_userProfile, new Callback() {
+            @Override
+            public void onSuccess() {
+                adjustDialogSize();
+            }
+            @Override
+            public void onError() {}
+        });
 
         iv_reply.setOnClickListener(onReplyIconClicked);
 
@@ -135,7 +162,7 @@ public class ViewDetailFragment extends DialogFragment implements TweetAction.Tw
                 @Override
                 public void onClick(View v) {
                     String replyText = et_reply.getText().toString();
-                    if(replyText.length() == 0) {
+                    if (replyText.length() == 0) {
                         showError("You don't type anything to reply :-)");
                     } else {
                         TweetAction action = new TweetAction(getContext());
@@ -170,17 +197,24 @@ public class ViewDetailFragment extends DialogFragment implements TweetAction.Tw
                 .show();
     }
 
+    @Override
+    public void onStop() {
+        OnViewDetailDialogCompleteListener listener = (OnViewDetailDialogCompleteListener)getActivity();
+        listener.onDetailViewComplete(updated);
+        super.onStop();
+    }
 
-  /* *********************************************************************************************
-   *
-   * Tweet Action Callbacks
-   *
-   * *********************************************************************************************/
+    /* *********************************************************************************************
+     *
+     * Tweet Action Callbacks
+     *
+     * *********************************************************************************************/
     @Override
     public void onReply(Tweet tweet) {
         replyLayout.setVisibility(View.GONE);
         //this.tweet = tweet;
         Toast.makeText(getContext(),"Your reply has been posted", Toast.LENGTH_SHORT).show();
+        updated = true;
     }
 
     @Override
@@ -188,17 +222,23 @@ public class ViewDetailFragment extends DialogFragment implements TweetAction.Tw
         Toast.makeText(getContext(),"You have retweeted this status", Toast.LENGTH_SHORT).show();
         this.tweet = tweet;
         updateTweetStatus();
+        updated = true;
     }
 
     @Override
     public void onFavorite(Tweet tweet) {
-        Toast.makeText(getContext(),"You likes this status", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(),"You liked this status", Toast.LENGTH_SHORT).show();
         this.tweet = tweet;
         updateTweetStatus();
+        updated = true;
     }
 
     @Override
     public void onTweetActionFailure(int actionType, int status, String error) {
         showError(error);
+    }
+
+    public interface OnViewDetailDialogCompleteListener {
+        void onDetailViewComplete(boolean refreshNeeded);
     }
 }

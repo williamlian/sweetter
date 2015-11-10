@@ -1,7 +1,7 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="@dimen/tweet_padding">
 
     <LinearLayout
@@ -10,14 +10,15 @@
         android:orientation="horizontal"
         android:id="@+id/ll_composer">
 
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/iv_composerImage"
             android:layout_width="@dimen/profile_image_width"
             android:layout_height="@dimen/profile_image_width"
             android:scaleType="fitStart"
             android:paddingTop="@dimen/tweet_padding"
             android:paddingRight="@dimen/tweet_padding"
-            android:paddingBottom="@dimen/tweet_padding"/>
+            android:paddingBottom="@dimen/tweet_padding"
+            app:riv_corner_radius="@dimen/profile_image_radius"/>
 
         <LinearLayout
             android:layout_width="fill_parent"

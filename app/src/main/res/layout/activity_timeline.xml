@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@android:color/white"
     tools:context="com.codepath.apps.restclienttemplate.TimelineActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -50,7 +51,7 @@
                     android:layout_width="@dimen/app_bar_height"
                     android:layout_height="@dimen/app_bar_height"
                     android:padding="@dimen/app_bar_padding"
-                    android:src="@drawable/ic_compose"
+                    android:src="@mipmap/ic_compose"
                     android:scaleType="fitCenter"
                     android:adjustViewBounds="true"
                     android:layout_alignParentRight="true"

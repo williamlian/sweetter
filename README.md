@@ -1,8 +1,8 @@
-# Project 3 - *Name of App Here*
+# Project 3 - *Sweeter*
 
-**Name of your app** is an android app that allows a user to view his Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
+**Sweeter** is an android app that allows a user to view his Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: **X** hours spent in total
+Time spent: **13** hours spent in total
 
 ## User Stories
 
@@ -36,15 +36,19 @@ The following **bonus** features are implemented:
 
 The following **additional** features are implemented:
 
-* [x] User can retweet a tweet
+* [x] User can re-tweet a tweet
 * [x] User can like a tweet
-* [x] Retweeted and likeds tweets will be marked on timeline and detail view
+* [x] Re-tweeted and likeds tweets will be marked on timeline and detail view
+* [x] Embedded media will also be shown on timeline
+* [ ] TODO: the size detail view dialog should be self-adjustable
 
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+![Demo](demo1.gif)
+
+![Error Demo](demo2.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
@@ -60,10 +64,11 @@ Describe any challenges encountered while building the app.
 - [codepath-oauth](https://github.com/thecodepath/android-oauth-handler) - Custom-built library for managing OAuth authentication and signing of requests
 - [PrettyTime](http://www.ocpsoft.org/prettytime/) - Time formatter
 - [LinkifiedTextView](http://michaelevans.org/blog/2013/03/29/clickable-links-in-android-listviews/) - support links inside List View
+- [RoundedImageView](https://github.com/vinc3m1/RoundedImageView) - rounded image view
 
 ## License
 
-    Copyright [yyyy] [name of copyright owner]
+    Copyright [2015] [William Lian]
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

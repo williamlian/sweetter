@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:paddingTop="@dimen/tweet_padding"
-              android:paddingBottom="@dimen/tweet_padding"
-              android:paddingRight="@dimen/tweet_padding"
-              android:orientation="horizontal"
-              android:descendantFocusability="blocksDescendants">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="@dimen/tweet_padding"
+    android:paddingBottom="@dimen/tweet_padding"
+    android:paddingRight="@dimen/tweet_padding"
+    android:orientation="horizontal"
+    android:descendantFocusability="blocksDescendants">
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/iv_userProfile"
         android:layout_width="@dimen/profile_image_width"
         android:layout_height="match_parent"
@@ -16,8 +17,8 @@
         android:paddingRight="@dimen/tweet_padding"
         android:paddingBottom="@dimen/tweet_padding"
         android:scaleType="fitStart"
-        android:src="@drawable/ic_launcher"/>
-
+        app:riv_corner_radius="@dimen/profile_image_radius"
+        android:src="@mipmap/ic_launcher"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -80,6 +81,14 @@
             android:linksClickable="true"
             android:textColorLink="@color/twitter_blue"/>
 
+        <LinearLayout
+            android:id="@+id/ll_media"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:padding="@dimen/tweet_padding">
+        </LinearLayout>
 
         <!-- ****************** Status ****************** -->
 
