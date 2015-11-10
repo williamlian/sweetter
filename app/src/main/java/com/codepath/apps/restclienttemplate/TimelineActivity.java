@@ -48,10 +48,10 @@ public class TimelineActivity
 
     boolean noMoreTweets = false;
 
-    static final boolean GET_USER_TIMELINE = true;
+    static final boolean GET_USER_TIMELINE = false;
     static final boolean USE_COMPOSE_DIALOG = true; //set to false to use activity window
 
-    static final String USER_OVERRIDE = "Android"; //debug purpose, set this to null when deploying
+    static final String USER_OVERRIDE = null; //"Android"; //debug purpose, set this to null when deploying
 
     static final int REQUEST_COMPOSE = 100;
     static final int FETCH_SIZE = 100;

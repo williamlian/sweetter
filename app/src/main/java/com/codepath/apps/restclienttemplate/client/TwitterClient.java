@@ -31,8 +31,8 @@ import java.util.Iterator;
 public class TwitterClient extends OAuthBaseClient {
 	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class;
 	public static final String REST_URL = "https://api.twitter.com/1.1";
-	public static final String REST_CONSUMER_KEY = "SdqOBMn0AmTYvmxI8wKnBVE3W";
-	public static final String REST_CONSUMER_SECRET = "eEUT2e2IqYdJFi65vihDiayU7JNBsovokNwPfvYn0chCGY6sly";
+	public static final String REST_CONSUMER_KEY = "";
+	public static final String REST_CONSUMER_SECRET = "";
 	public static final String REST_CALLBACK_URL = "oauth://sweetter.williamlian.com";
 
 	public TwitterClient(Context context) {

@@ -64,14 +64,12 @@ public class TweetAction {
                     callback.onReply(tweet);
                     break;
                 case RETWEET:
-                    tweet.update(response);
-                    tweet.addRetweetCount();
+                    tweet.retweet();
                     tweet.save();
                     callback.onRetweet(tweet);
                     break;
                 case FAVORITE:
-                    tweet.update(response);
-                    tweet.addFavoriteCount();
+                    tweet.favorite();
                     tweet.save();
                     callback.onFavorite(tweet);
                     break;

@@ -289,11 +289,13 @@ public class Tweet extends Model implements Serializable {
         return media;
     }
 
-    public void addRetweetCount() {
+    public void retweet() {
+        this.retweeted = true;
         this.retweetCount++;
     }
 
-    public void addFavoriteCount() {
+    public void favorite() {
+        this.favorited = true;
         this.favoriteCount++;
     }
 }
