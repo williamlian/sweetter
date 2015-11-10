@@ -46,7 +46,11 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-![Demo](demo1.gif)
+### Happy Path
+
+![Demo](demo.gif)
+
+### Network Failure Flow
 
 ![Error Demo](demo2.gif)
 
