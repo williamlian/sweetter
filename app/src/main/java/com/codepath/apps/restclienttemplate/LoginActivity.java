@@ -33,7 +33,7 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
         LoginUser.load(this, new LoginUser.LoadLoginCallback() {
             @Override
             public void onSuccess() {
-                Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
+                Intent i = new Intent(LoginActivity.this, HomeActivity.class);
                 startActivity(i);
             }
             @Override

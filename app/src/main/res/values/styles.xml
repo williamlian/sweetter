@@ -22,14 +22,13 @@
         <item name="android:padding">0dp</item>
     </style>
 
+    <style name="AppTheme.AppBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@color/twitter_blue</item>
+        <item name="android:colorActivatedHighlight">@color/twitter_blue</item>
+    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <!-- This would set the toolbar's background color -->
-        <item name="android:background">@color/twitter_blue</item>
-        <!-- android:textColorPrimary is the color of the title text in the Toolbar  -->
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <!-- android:actionMenuTextColor is the color of the text of action (menu) items  -->
-        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <!-- This configures the styles for the title within the Toolbar  -->

@@ -118,6 +118,10 @@ import java.util.List;
  */
 @Table(name = "Tweets")
 public class Tweet extends Model implements Serializable {
+    public static final String SOURCE_TIMELINE = "timeline";
+    public static final String SOURCE_MENTION = "mention";
+    public static final String SOURCE_USER = "user";
+
     // Define database columns and associated fields
     @Column(name = "tweetId")
     String tweetId;
@@ -141,6 +145,8 @@ public class Tweet extends Model implements Serializable {
     Date timestamp;
     @Column(name = "body")
     String body;
+    @Column(name = "source")
+    String source;
 
     List<String> media;
 
@@ -149,7 +155,7 @@ public class Tweet extends Model implements Serializable {
         super();
     }
 
-    public Tweet(JSONObject object) {
+    public Tweet(JSONObject object, String source) {
         super();
         update(object);
     }
@@ -188,11 +194,11 @@ public class Tweet extends Model implements Serializable {
         }
     }
 
-    public static void clearLocal() {
-        new Delete().from(Tweet.class).execute();
+    public static void clearLocal(String source) {
+        new Delete().from(Tweet.class).where("source=?",source).execute();
     }
 
-    public static ArrayList<Tweet> fromJson(JSONArray jsonArray) {
+    public static ArrayList<Tweet> fromJson(JSONArray jsonArray, String source) {
         ArrayList<Tweet> tweets = new ArrayList<Tweet>(jsonArray.length());
 
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -203,7 +209,7 @@ public class Tweet extends Model implements Serializable {
                 e.printStackTrace();
                 continue;
             }
-            Tweet tweet = new Tweet(tweetJson);
+            Tweet tweet = new Tweet(tweetJson, source);
             tweet.save();
             tweets.add(tweet);
         }
@@ -211,8 +217,8 @@ public class Tweet extends Model implements Serializable {
     }
 
 
-    public static List<Tweet> fromLocal() {
-        return new Select().from(Tweet.class).orderBy("timestamp DESC").execute();
+    public static List<Tweet> fromLocal(String source) {
+        return new Select().from(Tweet.class).where("source=?",source).orderBy("timestamp DESC").execute();
     }
 
 

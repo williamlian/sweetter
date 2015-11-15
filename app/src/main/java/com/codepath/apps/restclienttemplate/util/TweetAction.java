@@ -2,7 +2,7 @@ package com.codepath.apps.restclienttemplate.util;
 
 import android.content.Context;
 
-import com.codepath.apps.restclienttemplate.RestApplication;
+import com.codepath.apps.restclienttemplate.Sweeter;
 import com.codepath.apps.restclienttemplate.client.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -22,17 +22,17 @@ public class TweetAction {
     }
 
     public void reply(Tweet tweet, String replyText, TweetActionCallback callback) {
-        TwitterClient client = RestApplication.getRestClient();
+        TwitterClient client = Sweeter.getRestClient();
         client.reply(tweet.getTweetId(), replyText, new ActionResponseHandler(REPLY, tweet, callback));
     }
 
     public void retweet(Tweet tweet, TweetActionCallback callback) {
-        TwitterClient client = RestApplication.getRestClient();
+        TwitterClient client = Sweeter.getRestClient();
         client.retweet(tweet.getTweetId(), new ActionResponseHandler(RETWEET, tweet, callback));
     }
 
     public void favorite(Tweet tweet, TweetActionCallback callback) {
-        TwitterClient client = RestApplication.getRestClient();
+        TwitterClient client = Sweeter.getRestClient();
         client.favorite(tweet.getTweetId(), new ActionResponseHandler(FAVORITE, tweet, callback));
     }
 
@@ -59,7 +59,7 @@ public class TweetAction {
 
             switch (actionType) {
                 case REPLY:
-                    Tweet reply = new Tweet(response);
+                    Tweet reply = new Tweet(response, Tweet.SOURCE_TIMELINE);
                     reply.save();
                     callback.onReply(tweet);
                     break;

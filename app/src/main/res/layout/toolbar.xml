@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+<android.support.design.widget.AppBarLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/AppTheme.AppBarOverlay"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools">
+-->
+<android.support.v7.widget.Toolbar
+    android:id="@+id/toolbar"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    app:contentInsetLeft="0dp"
+    app:contentInsetStart="0dp"
+    app:layout_collapseMode="pin"
+    app:layout_scrollFlags="scroll|enterAlways"
+    app:popupTheme="@style/AppTheme.PopupOverlay"
+    app:theme="@style/AppTheme.AppBar"
+    app:titleTextAppearance="@style/Toolbar.TitleText">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="@dimen/app_bar_height"
+            android:layout_height="@dimen/app_bar_height"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true"
+            android:padding="5dp"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/iv_logo"
+            android:fontFamily="sans-serif"
+            android:gravity="center_vertical|left"
+            android:text="Sweeter!"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="normal"/>
+
+        <LinearLayout
+            android:id="@+id/toolbar_buttonSet"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="right|center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/ib_compose"
+                android:layout_width="@dimen/app_bar_height"
+                android:layout_height="@dimen/app_bar_height"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:padding="@dimen/app_bar_padding"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/ic_compose"/>
+
+            <ImageButton
+                android:id="@+id/ib_profile"
+                android:layout_width="@dimen/app_bar_height"
+                android:layout_height="@dimen/app_bar_height"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:padding="@dimen/app_bar_padding"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/ic_profile"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.Toolbar>
+    <!--
+    </android.support.design.widget.AppBarLayout>
+    -->

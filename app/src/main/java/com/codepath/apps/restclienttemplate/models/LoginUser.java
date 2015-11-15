@@ -3,7 +3,7 @@ package com.codepath.apps.restclienttemplate.models;
 import android.content.Context;
 import android.util.Log;
 
-import com.codepath.apps.restclienttemplate.RestApplication;
+import com.codepath.apps.restclienttemplate.Sweeter;
 import com.codepath.apps.restclienttemplate.client.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -17,23 +17,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class LoginUser implements Serializable {
-    int userId;
-    String userName;
-    String screenName;
-    String profileImage;
-
+public class LoginUser extends User implements Serializable {
     private static final String FILE_NAME = "last_logged_in_user";
     private static LoginUser instance;
 
     private LoginUser(JSONObject user) {
-        userId = user.optInt("id");
-        userName = user.optString("name");
-        screenName = user.optString("screen_name");
-        profileImage = user.optString("profile_image_url");
+        super(user);
     }
 
-    public static interface LoadLoginCallback {
+    public interface LoadLoginCallback {
         void onSuccess();
         void onFailure(Throwable e);
     }
@@ -47,7 +39,7 @@ public class LoginUser implements Serializable {
     }
 
     private static void loadOnline(final Context context, final LoadLoginCallback callback) {
-        TwitterClient client = RestApplication.getRestClient();
+        TwitterClient client = Sweeter.getRestClient();
         client.getUserSettings(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -90,17 +82,5 @@ public class LoginUser implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getScreenName() {
-        return "@" + screenName;
-    }
-
-    public String getProfileImage() {
-        return profileImage;
     }
 }

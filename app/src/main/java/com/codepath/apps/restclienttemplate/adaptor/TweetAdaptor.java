@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate.adaptor;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.ProfileActivity;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.util.TweetAction;
@@ -64,6 +66,8 @@ public class TweetAdaptor extends ArrayAdapter<Tweet> {
         viewHolder.tv_body.setText(tweet.getBody());
         viewHolder.tv_age.setText(tweet.getAge());
         Picasso.with(getContext()).load(tweet.getBiggerProfileImage()).into(viewHolder.iv_userProfile);
+
+        viewHolder.iv_userProfile.setOnClickListener(new OnUserProfileClickHandler(tweet.getScreenName()));
 
         if(tweet.getMedia() != null) {
             viewHolder.ll_media.removeAllViews();
@@ -145,5 +149,23 @@ public class TweetAdaptor extends ArrayAdapter<Tweet> {
             Toast.makeText(getContext(),"Failed to act on status: " + error, Toast.LENGTH_SHORT).show();
         }
     }
+
+    /* *********************************************************************************************
+     *
+     * Profile Actions
+     *
+     * *********************************************************************************************/
+    class OnUserProfileClickHandler implements View.OnClickListener {
+        private String screenName;
+        public OnUserProfileClickHandler(String screenName) {
+            this.screenName = screenName;
+        }
+        @Override
+        public void onClick(View v) {
+            Intent showProfileIntent = new Intent(getContext(), ProfileActivity.class);
+            showProfileIntent.putExtra(ProfileActivity.ARGS_USER, screenName);
+            TweetAdaptor.this.getContext().startActivity(showProfileIntent);
+        }
+    };
 
 }

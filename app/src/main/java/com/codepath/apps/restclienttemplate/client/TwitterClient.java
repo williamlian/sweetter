@@ -31,8 +31,8 @@ import java.util.Iterator;
 public class TwitterClient extends OAuthBaseClient {
 	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class;
 	public static final String REST_URL = "https://api.twitter.com/1.1";
-	public static final String REST_CONSUMER_KEY = "";
-	public static final String REST_CONSUMER_SECRET = "";
+	public static final String REST_CONSUMER_KEY = "SdqOBMn0AmTYvmxI8wKnBVE3W";
+	public static final String REST_CONSUMER_SECRET = "eEUT2e2IqYdJFi65vihDiayU7JNBsovokNwPfvYn0chCGY6sly";
 	public static final String REST_CALLBACK_URL = "oauth://sweetter.williamlian.com";
 
 	public TwitterClient(Context context) {
@@ -46,7 +46,6 @@ public class TwitterClient extends OAuthBaseClient {
         if(maxId != null) {
             params.put("max_id", maxId);
         }
-        //params.put("exclude_replies", "1");
         getClient().get(apiUrl, params, handler);
 	}
 
@@ -59,6 +58,16 @@ public class TwitterClient extends OAuthBaseClient {
             params.put("max_id", maxId);
         }
         //params.put("exclude_replies", "1");
+        getClient().get(apiUrl, params, handler);
+    }
+
+    public void getMentionTimeline(int count, String maxId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", String.valueOf(count));
+        if(maxId != null) {
+            params.put("max_id", maxId);
+        }
         getClient().get(apiUrl, params, handler);
     }
 

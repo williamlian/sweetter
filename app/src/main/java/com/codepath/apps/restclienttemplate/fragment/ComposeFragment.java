@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.codepath.apps.restclienttemplate.R;
-import com.codepath.apps.restclienttemplate.RestApplication;
+import com.codepath.apps.restclienttemplate.Sweeter;
 import com.codepath.apps.restclienttemplate.client.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.LoginUser;
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -107,11 +107,11 @@ public class ComposeFragment extends DialogFragment {
             tweetFail("You have not written anything yet ;-)");
             return;
         }
-        TwitterClient client = RestApplication.getRestClient();
+        TwitterClient client = Sweeter.getRestClient();
         client.postTweet(text, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Tweet newTweet = new Tweet(response);
+                Tweet newTweet = new Tweet(response, Tweet.SOURCE_TIMELINE);
                 newTweet.save();
                 tweetSuccess();
             }

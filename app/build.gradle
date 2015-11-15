@@ -51,4 +51,5 @@ dependencies {
 
     compile 'org.ocpsoft.prettytime:prettytime:3.2.7.Final'
     compile 'com.makeramen:roundedimageview:2.2.1'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 }
