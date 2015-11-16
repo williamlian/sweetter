@@ -5,11 +5,9 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,14 +32,18 @@ import com.squareup.picasso.Picasso;
  */
 public class ViewDetailFragment extends DialogFragment implements TweetAction.TweetActionCallback {
     private static final String ARG_TWEET = "tweet";
+    private static final String ARG_SHOW_REPLY = "showReply";
+
     private Tweet tweet;
+    private boolean showReply;
     private RelativeLayout replyLayout;
     private boolean updated;
 
-    public static ViewDetailFragment newInstance(Tweet tweet) {
+    public static ViewDetailFragment newInstance(Tweet tweet, boolean showReply) {
         ViewDetailFragment fragment = new ViewDetailFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_TWEET, tweet);
+        args.putBoolean(ARG_SHOW_REPLY, showReply);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,6 +57,7 @@ public class ViewDetailFragment extends DialogFragment implements TweetAction.Tw
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             tweet = (Tweet)getArguments().getSerializable(ARG_TWEET);
+            showReply = getArguments().getBoolean(ARG_SHOW_REPLY);
         }
         updated = false;
     }
@@ -96,7 +99,12 @@ public class ViewDetailFragment extends DialogFragment implements TweetAction.Tw
         ImageView iv_reply = (ImageView)view.findViewById(R.id.iv_reply);
 
         replyLayout = (RelativeLayout)view.findViewById(R.id.rl_reply);
-        replyLayout.setVisibility(View.GONE);
+
+        if(showReply) {
+            onReplyIconClicked.onClick(iv_reply);
+        } else {
+            replyLayout.setVisibility(View.GONE);
+        }
 
         tv_userName.setText(tweet.getUserName());
         tv_screenName.setText(tweet.getScreenName());
@@ -145,7 +153,7 @@ public class ViewDetailFragment extends DialogFragment implements TweetAction.Tw
         }
         if(tweet.isFavorited()) {
             iv_favoriteIcon.setImageResource(R.drawable.ic_favorited);
-            iv_favoriteIcon.setOnClickListener(null);
+            iv_favoriteIcon.setOnClickListener(onFavoriteIconClicked);
         } else {
             iv_favoriteIcon.setImageResource(R.drawable.ic_favorite);
             iv_favoriteIcon.setOnClickListener(onFavoriteIconClicked);
@@ -158,6 +166,9 @@ public class ViewDetailFragment extends DialogFragment implements TweetAction.Tw
             replyLayout.setVisibility(View.VISIBLE);
             Button replyButton = (Button)replyLayout.findViewById(R.id.btn_reply);
             final EditText et_reply = (EditText)replyLayout.findViewById(R.id.et_reply);
+            et_reply.setText(tweet.getScreenName() + " ");
+            et_reply.setSelection(tweet.getScreenName().length() + 1);
+            et_reply.requestFocus();
             replyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -185,7 +196,11 @@ public class ViewDetailFragment extends DialogFragment implements TweetAction.Tw
         @Override
         public void onClick(View v) {
             TweetAction action = new TweetAction(getContext());
-            action.favorite(tweet, ViewDetailFragment.this);
+            if(tweet.isFavorited()) {
+                action.unfavorite(tweet, ViewDetailFragment.this);
+            } else {
+                action.favorite(tweet, ViewDetailFragment.this);
+            }
         }
     };
 
@@ -232,6 +247,15 @@ public class ViewDetailFragment extends DialogFragment implements TweetAction.Tw
         updateTweetStatus();
         updated = true;
     }
+
+    @Override
+    public void onUnfavorite(Tweet tweet) {
+        Toast.makeText(getContext(),"You unliked this status", Toast.LENGTH_SHORT).show();
+        this.tweet = tweet;
+        updateTweetStatus();
+        updated = true;
+    }
+
 
     @Override
     public void onTweetActionFailure(int actionType, int status, String error) {

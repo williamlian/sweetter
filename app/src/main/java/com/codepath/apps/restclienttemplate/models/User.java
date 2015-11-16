@@ -8,9 +8,13 @@ import com.codepath.apps.restclienttemplate.client.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class User implements Serializable {
     int userId;
@@ -24,7 +28,6 @@ public class User implements Serializable {
 
     public interface ShowUserCallback {
         void onSuccess(User user);
-
         void onFailure(Throwable e);
     }
 
@@ -57,6 +60,18 @@ public class User implements Serializable {
                 callback.onFailure(throwable);
             }
         });
+    }
+
+    public static List<User> getUsers(JSONArray users) {
+        List<User> result = new ArrayList<>();
+        for(int i = 0; i < users.length(); i++) {
+            try {
+                result.add(new User(users.getJSONObject(i)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
     public String getUserName() {

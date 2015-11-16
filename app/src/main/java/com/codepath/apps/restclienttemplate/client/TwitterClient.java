@@ -136,6 +136,24 @@ public class TwitterClient extends OAuthBaseClient {
         });
     }
 
+    public void getFollowers(String screenName, int count, String cursor, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("followers/list.json");
+        RequestParams params = new RequestParams();
+        params.put("screen_name", screenName);
+        params.put("count", count);
+        params.put("cursor", cursor);
+        getClient().get(apiUrl, params, handler);
+    }
+
+    public void getFollowings(String screenName, int count, String cursor, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("followers/list.json");
+        RequestParams params = new RequestParams();
+        params.put("screen_name", screenName);
+        params.put("count", count);
+        params.put("cursor", cursor);
+        getClient().get(apiUrl, params, handler);
+    }
+
     public void reply(String tweetId, String body, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/update.json");
         RequestParams params = new RequestParams();
@@ -151,6 +169,13 @@ public class TwitterClient extends OAuthBaseClient {
 
     public void favorite(String tweetId, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("favorites/create.json");
+        RequestParams params = new RequestParams();
+        params.put("id", tweetId);
+        getClient().post(apiUrl, params, handler);
+    }
+
+    public void unfavorite(String tweetId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("favorites/destroy.json");
         RequestParams params = new RequestParams();
         params.put("id", tweetId);
         getClient().post(apiUrl, params, handler);

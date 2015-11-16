@@ -14,6 +14,7 @@ public class TweetAction {
     public static final int REPLY = 0;
     public static final int RETWEET = 1;
     public static final int FAVORITE = 2;
+    public static final int UNFAVORITE = 3;
 
     Context context;
 
@@ -36,10 +37,16 @@ public class TweetAction {
         client.favorite(tweet.getTweetId(), new ActionResponseHandler(FAVORITE, tweet, callback));
     }
 
+    public void unfavorite(Tweet tweet, TweetActionCallback callback) {
+        TwitterClient client = Sweeter.getRestClient();
+        client.unfavorite(tweet.getTweetId(), new ActionResponseHandler(UNFAVORITE, tweet, callback));
+    }
+
     public interface TweetActionCallback {
         void onReply(Tweet tweet);
         void onRetweet(Tweet tweet);
         void onFavorite(Tweet tweet);
+        void onUnfavorite(Tweet tweet);
         void onTweetActionFailure(int actionType, int status, String error);
     }
 
@@ -72,6 +79,11 @@ public class TweetAction {
                     tweet.favorite();
                     tweet.save();
                     callback.onFavorite(tweet);
+                    break;
+                case UNFAVORITE:
+                    tweet.unfavorite();
+                    tweet.save();
+                    callback.onUnfavorite(tweet);
                     break;
             }
         }

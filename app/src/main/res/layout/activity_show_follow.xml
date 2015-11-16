@@ -11,18 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true">
-
         <include layout="@layout/toolbar"/>
-
-        <include layout="@layout/content_profile_header"/>
-
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/fl_timeline"
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:layout_height="match_parent"
+        android:id="@+id/lv_users"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
 
 </android.support.design.widget.CoordinatorLayout>

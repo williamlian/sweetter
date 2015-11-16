@@ -26,4 +26,5 @@
 
     <dimen name="profile_image_radius">3dp</dimen>
     <dimen name="profile_header_height">300dp</dimen>
+    <dimen name="count_padding">16dp</dimen>
 </resources>

@@ -30,13 +30,17 @@ public class TweetAdaptor extends ArrayAdapter<Tweet> {
         TextView tv_retweet;
         TextView tv_favorite;
         TextView tv_age;
+        ImageView iv_replyIcon;
         ImageView iv_retweetIcon;
         ImageView iv_favoriteIcon;
         LinearLayout ll_media;
     }
 
-    public TweetAdaptor(Context context, List<Tweet> objects) {
+    private OnReplyHandler onReplyHandler;
+
+    public TweetAdaptor(Context context, List<Tweet> objects, OnReplyHandler onReplyHandler) {
         super(context, 0, objects);
+        this.onReplyHandler = onReplyHandler;
     }
 
     @Override
@@ -54,6 +58,7 @@ public class TweetAdaptor extends ArrayAdapter<Tweet> {
             viewHolder.tv_retweet = (TextView)convertView.findViewById(R.id.tv_retweet);
             viewHolder.tv_favorite = (TextView)convertView.findViewById(R.id.tv_favorite);
             viewHolder.tv_age = (TextView)convertView.findViewById(R.id.tv_age);
+            viewHolder.iv_replyIcon = (ImageView)convertView.findViewById(R.id.iv_replyIcon);
             viewHolder.iv_retweetIcon = (ImageView)convertView.findViewById(R.id.iv_retweetIcon);
             viewHolder.iv_favoriteIcon = (ImageView)convertView.findViewById(R.id.iv_favoriteIcon);
             viewHolder.ll_media = (LinearLayout)convertView.findViewById(R.id.ll_media);
@@ -66,6 +71,8 @@ public class TweetAdaptor extends ArrayAdapter<Tweet> {
         viewHolder.tv_body.setText(tweet.getBody());
         viewHolder.tv_age.setText(tweet.getAge());
         Picasso.with(getContext()).load(tweet.getBiggerProfileImage()).into(viewHolder.iv_userProfile);
+
+        viewHolder.iv_replyIcon.setOnClickListener(new TweetActionHandler(viewHolder, tweet));
 
         viewHolder.iv_userProfile.setOnClickListener(new OnUserProfileClickHandler(tweet.getScreenName()));
 
@@ -99,7 +106,7 @@ public class TweetAdaptor extends ArrayAdapter<Tweet> {
         }
         if(tweet.isFavorited()) {
             viewHolder.iv_favoriteIcon.setImageResource(R.drawable.ic_favorited);
-            viewHolder.iv_favoriteIcon.setOnClickListener(null);
+            viewHolder.iv_favoriteIcon.setOnClickListener(new TweetActionHandler(viewHolder, tweet));
         } else {
             viewHolder.iv_favoriteIcon.setImageResource(R.drawable.ic_favorite);
             viewHolder.iv_favoriteIcon.setOnClickListener(new TweetActionHandler(viewHolder, tweet));
@@ -127,7 +134,13 @@ public class TweetAdaptor extends ArrayAdapter<Tweet> {
                 action.retweet(tweet,this);
             } else if(v.getId() == R.id.iv_favoriteIcon) {
                 TweetAction action = new TweetAction(getContext());
-                action.favorite(tweet, this);
+                if(tweet.isFavorited()) {
+                    action.unfavorite(tweet, this);
+                } else {
+                    action.favorite(tweet, this);
+                }
+            } else if(v.getId() == R.id.iv_replyIcon) {
+                onReplyHandler.onReply(tweet);
             }
         }
 
@@ -145,9 +158,18 @@ public class TweetAdaptor extends ArrayAdapter<Tweet> {
         }
 
         @Override
+        public void onUnfavorite(Tweet tweet) {
+            updateTweetStatus(viewHolder, tweet);
+        }
+
+        @Override
         public void onTweetActionFailure(int actionType, int status, String error) {
             Toast.makeText(getContext(),"Failed to act on status: " + error, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public interface OnReplyHandler {
+        void onReply(Tweet tweet);
     }
 
     /* *********************************************************************************************

@@ -30,7 +30,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimelineFragment extends Fragment
+public class TimelineFragment extends Fragment implements TweetAdaptor.OnReplyHandler
 {
     private static final int HTTP_TOO_MANY_REQUESTS = 429;
     static final boolean GET_USER_TIMELINE = false;
@@ -65,7 +65,7 @@ public class TimelineFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_timeline, container, false);
 
-        tweetAdaptor = new TweetAdaptor(getActivity(), new ArrayList<Tweet>());
+        tweetAdaptor = new TweetAdaptor(getActivity(), new ArrayList<Tweet>(), this);
         ListView ll_timeline = (ListView) view.findViewById(R.id.ll_timeline);
         ll_timeline.setAdapter(tweetAdaptor);
         ll_timeline.setOnScrollListener(onLoadMoreListener);
@@ -250,11 +250,15 @@ public class TimelineFragment extends Fragment
 
     public void showDetailView(Tweet tweet) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        ViewDetailFragment detailFragment = ViewDetailFragment.newInstance(tweet);
+        ViewDetailFragment detailFragment = ViewDetailFragment.newInstance(tweet, false);
         detailFragment.show(fm, "detail_view_dialog");
     }
 
-
+    public void onReply(Tweet tweet) {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        ViewDetailFragment detailFragment = ViewDetailFragment.newInstance(tweet, true);
+        detailFragment.show(fm, "detail_view_dialog");
+    }
 
     private void showError(String message) {
         new MaterialDialog.Builder(getContext())

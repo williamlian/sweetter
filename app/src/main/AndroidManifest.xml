@@ -57,6 +57,11 @@
             android:parentActivityName=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".ShowFollowActivity"
+            android:parentActivityName=".ProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

@@ -304,4 +304,9 @@ public class Tweet extends Model implements Serializable {
         this.favorited = true;
         this.favoriteCount++;
     }
+
+    public void unfavorite() {
+        this.favorited = false;
+        this.favoriteCount--;
+    }
 }

@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -60,6 +61,12 @@ public class ProfileActivity extends AppCompatActivity implements User.ShowUserC
                 showFollowing();
             }
         });
+        tv_follower.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFollower();
+            }
+        });
 
         TimelineFragment timelineFragment = TimelineFragment.newInstance(Tweet.SOURCE_USER, user.getScreenName());
         FragmentManager fm = getSupportFragmentManager();
@@ -82,11 +89,17 @@ public class ProfileActivity extends AppCompatActivity implements User.ShowUserC
     }
 
     private void showFollowing() {
-
+        Intent showUsersIntent = new Intent(this, ShowFollowActivity.class);
+        showUsersIntent.putExtra(ShowFollowActivity.ARG_SCREEN_NAME, user.getScreenName());
+        showUsersIntent.putExtra(ShowFollowActivity.ARG_USER_LIST_TYPE, ShowFollowActivity.FOLLOWINGS);
+        startActivity(showUsersIntent);
     }
 
     private void showFollower() {
-
+        Intent showUsersIntent = new Intent(this, ShowFollowActivity.class);
+        showUsersIntent.putExtra(ShowFollowActivity.ARG_SCREEN_NAME, user.getScreenName());
+        showUsersIntent.putExtra(ShowFollowActivity.ARG_USER_LIST_TYPE, ShowFollowActivity.FOLLOWERS);
+        startActivity(showUsersIntent);
     }
 
     private SpannableStringBuilder getCountSpan(String count, String text) {
