@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme.AppBarOverlay"
         android:fitsSystemWindows="true">
 
-        <include layout="@layout/toolbar"/>
+        <include layout="@layout/toolbar_with_menu"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
@@ -22,18 +22,6 @@
             app:tabIndicatorColor="@color/twitter_blue"
             app:tabTextColor="@color/regular"
             app:tabSelectedTextColor="@color/twitter_blue"/>
-
-        <!--
-        <com.astuetz.PagerSlidingTabStrip
-            android:id="@+id/tabs"
-            app:pstsShouldExpand="true"
-            app:pstsTextAllCaps="true"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            app:pstsDividerColor="@color/twitter_blue"
-            app:pstsIndicatorColor="@color/twitter_blue"
-            app:pstsUnderlineColor="@color/twitter_blue"/>
-        -->
 
     </android.support.design.widget.AppBarLayout>
 

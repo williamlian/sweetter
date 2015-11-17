@@ -1,5 +1,7 @@
 package com.codepath.apps.restclienttemplate.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,12 +41,56 @@ public class TimelineFragment extends Fragment implements TweetAdaptor.OnReplyHa
     public static final String ARGS_SOURCE = "source";
     public static final String ARGS_USER = "user";
 
+    // UI widget handle
     TweetAdaptor tweetAdaptor;
     SwipeRefreshLayout swipeContainer;
+
+    /* noMoreTweets will be true if:
+     *   - maxId returned is the same as the max Id from the list
+     *   - HTTP 429 : Too Many Requests returned
+     *   - No network connection
+     * Every time call to getTimeline(null) will reset this flag to true */
     boolean noMoreTweets = false;
+
+    /*
+     * The source of timeline, possible values listed in Tweet class */
     String source;
+
+    /*
+     * If source == USER then the user's screen name, otherwise ignored */
     String user = null;
 
+    /*
+     * If source == SEARCH then the search query, otherwise ignored */
+    String query = null;
+
+    /* *********************************************************************************************
+     *
+     * Fragment Hanlder
+     *
+     * *********************************************************************************************/
+
+    public interface OnTimelineActionHandler {
+        void onTimelineLoadStart();
+        void onTimelineLoadCompleted();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if(!(activity instanceof OnTimelineActionHandler)) {
+            throw new TypeNotPresentException("OnTimelineActionHandler",null);
+        }
+        actionHandler = (OnTimelineActionHandler)activity;
+    }
+
+    private OnTimelineActionHandler actionHandler;
+
+    /* *********************************************************************************************
+     *
+     * Fragment OVerrides
+     *
+     * *********************************************************************************************/
     public static TimelineFragment newInstance(String source, String user) {
         Bundle args = new Bundle();
         args.putString(ARGS_SOURCE, source);
@@ -52,6 +98,11 @@ public class TimelineFragment extends Fragment implements TweetAdaptor.OnReplyHa
         TimelineFragment fragment = new TimelineFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Timeline Fragment for %s", source);
     }
 
     @Override
@@ -87,6 +138,7 @@ public class TimelineFragment extends Fragment implements TweetAdaptor.OnReplyHa
      * *********************************************************************************************/
     public void getTimeline(String max) {
         if(AppUtil.isNetworkAvailable(getContext())) {
+            actionHandler.onTimelineLoadStart();
             if (GET_USER_TIMELINE) {
                 getUserTimeline(max);
             } else {
@@ -100,6 +152,9 @@ public class TimelineFragment extends Fragment implements TweetAdaptor.OnReplyHa
                     case Tweet.SOURCE_USER:
                         getUserTimeline(max);
                         break;
+                    case Tweet.SOURCE_SEARCH:
+                        getSearchTimeline(max);
+                        break;
                 }
             }
         } else {
@@ -111,6 +166,17 @@ public class TimelineFragment extends Fragment implements TweetAdaptor.OnReplyHa
         List<Tweet> tweets = Tweet.fromLocal(source);
         tweetAdaptor.clear();
         tweetAdaptor.addAll(tweets);
+    }
+
+    public void search(String query) {
+        if(query != null && !query.isEmpty()) {
+            this.source = Tweet.SOURCE_SEARCH;
+            this.query = query;
+        } else {
+            this.source = Tweet.SOURCE_TIMELINE;
+            this.query = null;
+        }
+        getTimeline(null);
     }
 
     /* *********************************************************************************************
@@ -174,6 +240,12 @@ public class TimelineFragment extends Fragment implements TweetAdaptor.OnReplyHa
         client.getUserTimeline(screenName, FETCH_SIZE, max, new TimelineResponseHandler(max));
     }
 
+    private void getSearchTimeline(String max) {
+        Log.i(this.getClass().getName(), String.format("Loading search timeline for %s older than: %s", query, max));
+        TwitterClient client = Sweeter.getRestClient();
+        client.searchTimeline(query, FETCH_SIZE, max, new TimelineResponseHandler(max));
+    }
+
     /* *********************************************************************************************
      *
      * Response Handlers
@@ -207,6 +279,12 @@ public class TimelineFragment extends Fragment implements TweetAdaptor.OnReplyHa
                 noMoreTweets = true;
             }
             swipeContainer.setRefreshing(false);
+            actionHandler.onTimelineLoadCompleted();
+        }
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+            onSuccess(statusCode, headers, response.optJSONArray("statuses"));
         }
 
         @Override
@@ -230,6 +308,7 @@ public class TimelineFragment extends Fragment implements TweetAdaptor.OnReplyHa
                 Log.e(this.getClass().getName(), String.format("Rest call failed [%d] %s", statusCode, json.toString()));
             }
             swipeContainer.setRefreshing(false);
+            actionHandler.onTimelineLoadCompleted();
         }
     };
 
@@ -248,12 +327,13 @@ public class TimelineFragment extends Fragment implements TweetAdaptor.OnReplyHa
      *
      * *********************************************************************************************/
 
-    public void showDetailView(Tweet tweet) {
+    private void showDetailView(Tweet tweet) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         ViewDetailFragment detailFragment = ViewDetailFragment.newInstance(tweet, false);
         detailFragment.show(fm, "detail_view_dialog");
     }
 
+    @Override
     public void onReply(Tweet tweet) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         ViewDetailFragment detailFragment = ViewDetailFragment.newInstance(tweet, true);

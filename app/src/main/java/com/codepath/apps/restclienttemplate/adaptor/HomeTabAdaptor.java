@@ -11,19 +11,18 @@ public class HomeTabAdaptor extends FragmentPagerAdapter {
     final int PAGE_COUNT = 2;
     private String tabTitles[] = new String[] { "Timeline", "Mentions" };
 
+    private Fragment[] fragments = new Fragment[] {
+        TimelineFragment.newInstance(Tweet.SOURCE_TIMELINE, null),
+        TimelineFragment.newInstance(Tweet.SOURCE_MENTION, null)
+    };
+
     public HomeTabAdaptor(FragmentManager fm) {
         super(fm);
     }
 
     @Override
     public Fragment getItem(int position) {
-        switch(position) {
-            case 0:
-                return TimelineFragment.newInstance(Tweet.SOURCE_TIMELINE, null);
-            case 1:
-                return TimelineFragment.newInstance(Tweet.SOURCE_MENTION, null);
-        }
-        return null;
+        return fragments[position];
     }
 
     @Override

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true">
 
-        <include layout="@layout/toolbar"/>
+        <include layout="@layout/toolbar_with_menu"/>
 
         <include layout="@layout/content_profile_header"/>
 

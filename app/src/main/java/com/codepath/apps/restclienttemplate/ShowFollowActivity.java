@@ -3,6 +3,8 @@ package com.codepath.apps.restclienttemplate;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -11,6 +13,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.codepath.apps.restclienttemplate.adaptor.UserAdaptor;
 import com.codepath.apps.restclienttemplate.client.TwitterClient;
+import com.codepath.apps.restclienttemplate.fragment.TimelineFragment;
 import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.apps.restclienttemplate.util.AppUtil;
 import com.codepath.apps.restclienttemplate.widget.EndlessScrollListener;
@@ -22,7 +25,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShowFollowActivity extends AppCompatActivity {
+public class ShowFollowActivity extends AppCompatActivity
+    implements TimelineFragment.OnTimelineActionHandler
+{
     public static final String ARG_USER_LIST_TYPE = "userListType";
     public static final String ARG_SCREEN_NAME = "screenName";
 
@@ -38,6 +43,7 @@ public class ShowFollowActivity extends AppCompatActivity {
     UserAdaptor userAdaptor;
     boolean noMoreUsers = false;
     String cursor = null;
+    MenuItem mi_progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +63,36 @@ public class ShowFollowActivity extends AppCompatActivity {
         getUserList();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.users, menu);
+        mi_progressBar = menu.findItem(R.id.mi_progressBar);
+        return super.onCreateOptionsMenu(menu);
+    }
     /* *********************************************************************************************
      *
-     * UI Method Triggering Reloads
+     * Timeline action handlers
      *
      * *********************************************************************************************/
+    @Override
+    public void onTimelineLoadStart() {
+        if(mi_progressBar != null) {
+            mi_progressBar.setVisible(true);
+        }
+    }
+
+    @Override
+    public void onTimelineLoadCompleted() {
+        if(mi_progressBar != null) {
+            mi_progressBar.setVisible(false);
+        }
+    }
+
+    /* *********************************************************************************************
+             *
+             * UI Method Triggering Reloads
+             *
+             * *********************************************************************************************/
     private EndlessScrollListener onLoadMoreListener = new EndlessScrollListener() {
         @Override
         public boolean onLoadMore (int page, int totalItemsCount) {

@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate.client;
 import android.content.Context;
 import android.util.Log;
 
+import com.codepath.apps.restclienttemplate.fragment.TimelineFragment;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -58,6 +59,17 @@ public class TwitterClient extends OAuthBaseClient {
             params.put("max_id", maxId);
         }
         //params.put("exclude_replies", "1");
+        getClient().get(apiUrl, params, handler);
+    }
+
+    public void searchTimeline(String query, int count, String maxId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("search/tweets.json");
+        RequestParams params = new RequestParams();
+        params.put("q", query);
+        params.put("count", String.valueOf(count));
+        if(maxId != null) {
+            params.put("max_id", maxId);
+        }
         getClient().get(apiUrl, params, handler);
     }
 

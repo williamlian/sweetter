@@ -9,20 +9,26 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.codepath.apps.restclienttemplate.fragment.TimelineFragment;
+import com.codepath.apps.restclienttemplate.models.LoginUser;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.models.User;
 import com.squareup.picasso.Picasso;
 
-public class ProfileActivity extends AppCompatActivity implements User.ShowUserCallback {
+public class ProfileActivity extends AppCompatActivity
+        implements User.ShowUserCallback, TimelineFragment.OnTimelineActionHandler
+{
     public static final String ARGS_USER = "screen_name";
 
     private User user;
+    private MenuItem mi_progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +40,26 @@ public class ProfileActivity extends AppCompatActivity implements User.ShowUserC
 
         String screenName = getIntent().getExtras().getString(ARGS_USER);
         User.getUser(screenName,this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile, menu);
+        mi_progressBar = menu.findItem(R.id.mi_progressBar);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.mi_directMessage:
+                if(user.getScreenName().equals(LoginUser.get().getScreenName())) {
+                    viewDirectMessage();
+                } else {
+                    composeDirectMessage();
+                }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void onLoadUserCompleted() {
@@ -73,6 +99,11 @@ public class ProfileActivity extends AppCompatActivity implements User.ShowUserC
         fm.beginTransaction().replace(R.id.fl_timeline, timelineFragment).commit();
     }
 
+    /* *********************************************************************************************
+     *
+     * Implemented Callbacks
+     *
+     * *********************************************************************************************/
     @Override
     public void onSuccess(User user) {
         this.user = user;
@@ -88,6 +119,25 @@ public class ProfileActivity extends AppCompatActivity implements User.ShowUserC
                 .show();
     }
 
+    @Override
+    public void onTimelineLoadStart() {
+        if(mi_progressBar != null) {
+            mi_progressBar.setVisible(true);
+        }
+    }
+
+    @Override
+    public void onTimelineLoadCompleted() {
+        if(mi_progressBar != null) {
+            mi_progressBar.setVisible(false);
+        }
+    }
+
+    /* *********************************************************************************************
+     *
+     * UI Actions
+     *
+     * *********************************************************************************************/
     private void showFollowing() {
         Intent showUsersIntent = new Intent(this, ShowFollowActivity.class);
         showUsersIntent.putExtra(ShowFollowActivity.ARG_SCREEN_NAME, user.getScreenName());
@@ -102,6 +152,19 @@ public class ProfileActivity extends AppCompatActivity implements User.ShowUserC
         startActivity(showUsersIntent);
     }
 
+    private void composeDirectMessage() {
+
+    }
+
+    private void viewDirectMessage() {
+
+    }
+
+    /* *********************************************************************************************
+     *
+     * UI Helper
+     *
+     * *********************************************************************************************/
     private SpannableStringBuilder getCountSpan(String count, String text) {
         ForegroundColorSpan countColor = new ForegroundColorSpan(getResources().getColor(R.color.user_name));
         SpannableStringBuilder ssb = new SpannableStringBuilder(count);

@@ -2,9 +2,30 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!--<item android:id="@+id/mi_compose"-->
-          <!--android:title="Compose"-->
-          <!--android:icon="@drawable/ic_compose"-->
-          <!--app:showAsAction="always"/>-->
+    <item android:id="@+id/mi_search"
+        android:orderInCategory="1"
+        android:title="Search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
+
+    <item android:id="@+id/mi_compose"
+        android:orderInCategory="10"
+          android:title="Compose"
+          android:icon="@mipmap/ic_compose"
+          app:showAsAction="always"/>
+
+    <item android:id="@+id/mi_profile"
+        android:orderInCategory="20"
+        android:title="Profile"
+        android:icon="@mipmap/ic_profile"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/mi_progressBar"
+        android:title="Loading..."
+        android:visible="false"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        app:actionLayout="@layout/content_progress_bar" />
 
 </menu>
