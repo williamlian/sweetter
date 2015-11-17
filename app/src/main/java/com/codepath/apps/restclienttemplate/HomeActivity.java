@@ -12,7 +12,6 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -152,6 +151,7 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onDetailViewComplete(boolean refreshNeeded) {
         if(refreshNeeded) {
+            Log.i(getClass().getName(), "Refreshing Timeline");
             if(currentPage instanceof TimelineFragment) {
                 ((TimelineFragment)currentPage).getTimelineFromLocal();
             }

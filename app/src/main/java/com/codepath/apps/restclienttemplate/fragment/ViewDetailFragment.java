@@ -229,7 +229,7 @@ public class ViewDetailFragment extends DialogFragment implements TweetAction.Tw
         replyLayout.setVisibility(View.GONE);
         //this.tweet = tweet;
         Toast.makeText(getContext(),"Your reply has been posted", Toast.LENGTH_SHORT).show();
-        updated = true;
+        updated = false;
     }
 
     @Override

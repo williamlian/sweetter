@@ -65,10 +65,10 @@ public class Tweet extends Model implements Serializable {
 
     public Tweet(JSONObject object, String source) {
         super();
-        update(object);
+        update(object, source);
     }
 
-    public void update(JSONObject object) {
+    public void update(JSONObject object, String source) {
         try {
             JSONObject user = object.getJSONObject("user");
             this.tweetId = object.getString("id_str");
@@ -82,6 +82,7 @@ public class Tweet extends Model implements Serializable {
             this.favorited = object.getBoolean("favorited");
             this.timestamp = DateUtil.convertStringToDate(object.getString("created_at"));
             this.body = object.optString("text");
+            this.source = source;
 
             JSONArray media = object.getJSONObject("entities").optJSONArray("media");
             if(media != null) {
@@ -126,7 +127,7 @@ public class Tweet extends Model implements Serializable {
 
 
     public static List<Tweet> fromLocal(String source) {
-        return new Select().from(Tweet.class).where("source=?",source).orderBy("timestamp DESC").execute();
+        return new Select().from(Tweet.class).where("source='" + source + "'").orderBy("timestamp DESC").execute();
     }
 
 

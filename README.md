@@ -39,7 +39,7 @@ The following **bonus** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-![Demo](demo.gif)
+![Demo](demo3.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
