@@ -16,7 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.codepath.apps.restclienttemplate.fragment.SendDirectMessageFragment;
 import com.codepath.apps.restclienttemplate.fragment.TimelineFragment;
+import com.codepath.apps.restclienttemplate.fragment.ViewDirectMessageFragment;
 import com.codepath.apps.restclienttemplate.models.LoginUser;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.models.User;
@@ -153,11 +155,15 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     private void composeDirectMessage() {
-
+        FragmentManager fm = getSupportFragmentManager();
+        SendDirectMessageFragment fragment = SendDirectMessageFragment.newInstance(user);
+        fragment.show(fm, "send_direct_message");
     }
 
     private void viewDirectMessage() {
-
+        FragmentManager fm = getSupportFragmentManager();
+        ViewDirectMessageFragment viewDirectMessageFragment = ViewDirectMessageFragment.newInstance();
+        viewDirectMessageFragment.show(fm, "view_direct_message_dialog");
     }
 
     /* *********************************************************************************************

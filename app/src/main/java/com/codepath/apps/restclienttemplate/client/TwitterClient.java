@@ -3,7 +3,6 @@ package com.codepath.apps.restclienttemplate.client;
 import android.content.Context;
 import android.util.Log;
 
-import com.codepath.apps.restclienttemplate.fragment.TimelineFragment;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -153,7 +152,9 @@ public class TwitterClient extends OAuthBaseClient {
         RequestParams params = new RequestParams();
         params.put("screen_name", screenName);
         params.put("count", count);
-        params.put("cursor", cursor);
+        if(cursor != null) {
+            params.put("cursor", cursor);
+        }
         getClient().get(apiUrl, params, handler);
     }
 
@@ -162,8 +163,28 @@ public class TwitterClient extends OAuthBaseClient {
         RequestParams params = new RequestParams();
         params.put("screen_name", screenName);
         params.put("count", count);
-        params.put("cursor", cursor);
+        if(cursor != null) {
+            params.put("cursor", cursor);
+        }
         getClient().get(apiUrl, params, handler);
+    }
+
+    public void getDirectMessages(int count, String maxId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("direct_messages.json");
+        RequestParams params = new RequestParams();
+        params.put("count", count);
+        if(maxId != null) {
+            params.put("max_id", maxId);
+        }
+        getClient().get(apiUrl, params, handler);
+    }
+
+    public void postDirectMessage(String screenName, String message, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("direct_messages/new.json");
+        RequestParams params = new RequestParams();
+        params.put("screen_name", screenName);
+        params.put("text", message);
+        getClient().post(apiUrl, params, handler);
     }
 
     public void reply(String tweetId, String body, AsyncHttpResponseHandler handler) {

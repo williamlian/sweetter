@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="@dimen/tweet_padding">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:padding="@dimen/tweet_padding">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -60,35 +60,17 @@
         android:layout_below="@id/ll_composer"
         android:background="@drawable/reply_box"
         android:padding="@dimen/tweet_padding"
-        android:hint="@string/tweet_hint"/>
+        android:layout_marginTop="@dimen/body_margin"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <Button
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/ll_control"
-        android:layout_below="@id/et_tweet">
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical|left"
-            android:layout_alignParentLeft="true"
-            android:id="@+id/tv_letterLeft"/>
-
-        <Button
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_tweet"
-            android:text="TWEET"
-            android:background="@android:color/transparent"
-            android:gravity="center_vertical|right"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@id/tv_letterLeft"
-            android:layout_alignBottom="@id/tv_letterLeft"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"/>
-
-    </RelativeLayout>
-
+        android:id="@+id/btn_send"
+        android:text="SEND"
+        android:background="@android:color/transparent"
+        android:gravity="center_vertical|right"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/et_tweet"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"/>
 </RelativeLayout>

@@ -1,6 +1,6 @@
-# Project 4 - *Name of App Here*
+# Project 4 - *Sweeter 2.0*
 
-**Name of your app** is an android app that allows a user to view home and mentions timelines, view user profiles with user timelines, as well as compose and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
+**Sweetwe 2.0** is an android app that allows a user to view home and mentions timelines, view user profiles with user timelines, as well as compose and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
 Time spent: **X** hours spent in total
 
@@ -33,23 +33,21 @@ The following **optional** features are implemented:
 
 The following **bonus** features are implemented:
 
-* [ ] User can view their direct messages (or send new ones)
-
-The following **additional** features are implemented:
-
-* [ ] List anything else that you can get done to improve the app functionality!
+* [x] User can view their direct messages (or send new ones)
 
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+![Demo](demo.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+* Need to work on the collapsible toolbar
+* Need to style navigation icon
+* Need to control the dialog size
 
 ## Open-source libraries used
 
@@ -58,7 +56,7 @@ Describe any challenges encountered while building the app.
 
 ## License
 
-    Copyright [yyyy] [name of copyright owner]
+    Copyright [2015] [William Lian]
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
